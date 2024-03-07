@@ -1,0 +1,106 @@
+import java.io.*;
+import java.util.Scanner;
+
+public class Main {
+    private static final Scanner scanner = new Scanner(System.in);
+    private static SpellChecker spellChecker; 
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("\nSelect the action you want to take:");
+            System.out.println("1. Load words from dictionary");
+            System.out.println("2. Search for a word in the dictionary");
+            System.out.println("3. Add word to dictionary");
+            System.out.println("4. Delete word from dictionary");
+            System.out.println("5. Check spelling in text file");
+            System.out.println("0. Exit");
+            System.out.print("Your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();  
+
+            switch (choice) {
+                case 1:
+                    loadDictionary();
+                    break;
+                case 2:
+                    searchWord();
+                    break;
+                case 3:
+                    insertWord();
+                    break;
+                case 4:
+                    deleteWord();
+                    break;
+                case 5:
+                    spellCheck();
+                    break;
+                case 0:
+                    System.out.println("Exiting the program :)");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid selection. Please try again.");
+            }
+        }
+    }
+
+    private static void loadDictionary() {
+        System.out.print("Enter the filename to upload: ");
+        String fileName = scanner.nextLine();
+        try {
+            spellChecker = new SpellChecker(235924);
+            spellChecker.loadDictionary(fileName);
+            System.out.println("Dictionary from"+fileName + " file has been loaded successfully.");
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + e.getMessage());
+        }
+    }
+
+    private static void searchWord() {
+        System.out.print("Enter word to search: ");
+        String word = scanner.nextLine();
+        if (spellChecker != null && spellChecker.search(word)) {
+            System.out.println("The word was found in the dictionary: " + word);
+        } else {
+            System.out.println("The word was not found in the dictionary: " + word);
+        }
+    }
+
+    private static void insertWord() {
+        System.out.print("Enter word to add: ");
+        String word = scanner.nextLine();
+        if (spellChecker != null) {
+            spellChecker.insert(word);
+            System.out.println("The word was added to the dictionary: " + word);
+        } else {
+            System.out.println("Please install dictionary first.");
+        }
+    }
+
+    private static void deleteWord() {
+        System.out.print("Enter word to delete: ");
+        String word = scanner.nextLine();
+        if (spellChecker != null) {
+            spellChecker.delete(word);
+            System.out.println("The word was deleted from the dictionary: " + word);
+        } else {
+            System.out.println("Please install dictionary first.");
+        }
+    }
+
+    private static void spellCheck() {
+        System.out.print("Enter the filename to check: ");
+        String fileName = scanner.nextLine();
+        if (spellChecker != null) {
+            try {
+                spellChecker.spellCheck(fileName);
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Please install dictionary first.");
+        }
+    }
+}
+
+
