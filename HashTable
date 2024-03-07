@@ -1,0 +1,77 @@
+public class HashTable {
+    private String[] table;
+    private int capacity;
+
+    public HashTable(int capacity) {
+        this.capacity = capacity;
+        this.table = new String[capacity];
+    }
+
+    private int hash(String key) {
+        int hashValue = key.hashCode();
+        hashValue %= capacity;
+        if (hashValue < 0) {
+            hashValue += capacity;
+        }
+        return hashValue;
+    }
+
+    public void insert(String key) {
+        int index = hash(key);
+        int originalIndex = index;
+        while (table[index] != null) {
+            if (table[index].equals(key)) {
+               
+                return;
+            }
+            index = (index + 1) % capacity;
+            if (index == originalIndex) {
+                
+                return;
+            }
+        }
+        table[index] = key;
+    }
+
+    public boolean search(String key) {
+        int index = hash(key);
+        int originalIndex = index;
+        while (table[index] != null) {
+            if (table[index].equals(key)) {
+                return true;
+            }
+            index = (index + 1) % capacity;
+            if (index == originalIndex) {
+                break;
+            }
+        }
+        return false;
+    }
+
+     public void delete(String key) {
+        int index = hash(key);
+        int originalIndex = index;
+        while (table[index] != null) {
+            if (table[index].equals(key)) {
+                table[index] = null; 
+             
+                rehashFrom(index);
+                return;
+            }
+            index = (index + 1) % capacity;
+            if (index == originalIndex) {
+                break;
+            }
+        }
+    }
+
+    private void rehashFrom(int startIndex) {
+        int currentIndex = (startIndex + 1) % capacity;
+        while (table[currentIndex] != null) {
+            String itemToRehash = table[currentIndex];
+            table[currentIndex] = null;
+            insert(itemToRehash); 
+            currentIndex = (currentIndex + 1) % capacity;
+        }
+    }
+}
